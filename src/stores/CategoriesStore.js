@@ -1,5 +1,6 @@
 import { defineStore } from "pinia"
 import sourceData from "@/data.json"
+import {upsert} from "@/helpers";
 
 export const useCategoriesStore = defineStore('CategoriesStore', {
   state: () => {
@@ -11,6 +12,8 @@ export const useCategoriesStore = defineStore('CategoriesStore', {
 
   },
   actions: {
-
+    setCategory (category) {
+      upsert(this.categories, category)
+    }
   }
 })

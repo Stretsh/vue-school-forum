@@ -15,8 +15,6 @@ const props = defineProps({
 
 const user = computed(() => useUsersStore().authUser)
 
-console.log(user)
-
 </script>
 
 <template>

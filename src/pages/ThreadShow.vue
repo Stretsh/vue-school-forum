@@ -5,6 +5,7 @@ import PostForm from "@/components/PostForm.vue"
 import {storeToRefs} from "pinia"
 import {useThreadsStore} from "@/stores/ThreadsStore"
 import {usePostsStore} from "@/stores/PostsStore";
+import {findById} from "@/helpers";
 
 const { threads } = storeToRefs(useThreadsStore())
 const { posts } = storeToRefs(usePostsStore())
@@ -17,7 +18,7 @@ const props = defineProps({
     }
 })
 
-const thread = computed(() => threads.value.find(t => t.id === props.id))
+const thread = computed(() => findById(threads.value, props.id))
 const threadPosts = computed(() => posts.value.filter(post => post.threadId === props.id))
 
 const addPost = (eventData) => {
@@ -26,15 +27,18 @@ const addPost = (eventData) => {
         threadId: props.id
     }
     createPost(post)
-    // postsStore.posts.value.push(post)
-    // thread.value.posts.push(post.id)
 }
 
 </script>
 
 <template>
     <div class="col-large push-top">
-        <h1>{{ thread.title }}</h1>
+        <h1>
+            {{ thread.title }}
+            <RouterLink :to="{name: 'ThreadEdit', id: props.id}">
+                <button class="btn-green btn-small">Edit Thread</button>
+            </RouterLink>
+        </h1>
         <PostList :posts="threadPosts" />
 
         <PostForm @save="addPost"/>

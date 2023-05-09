@@ -2,7 +2,8 @@
 import {reactive} from "vue"
 import {storeToRefs} from "pinia"
 import {usePostsStore} from "@/stores/PostsStore"
-import {useUsersStore} from "@/stores/UsersStore";
+import {useUsersStore} from "@/stores/UsersStore"
+import {findById} from "@/helpers"
 
 
 const { posts } = storeToRefs(usePostsStore())
@@ -19,9 +20,7 @@ const postById = (postId) => {
   return posts.find(p => p.id === postId)
 }
 
-const userById = (userId) => {
-  return users.value.find(u => u.id === userId)
-}
+const userById = (userId) => findById(users.value, userId)
 </script>
 
 <template>

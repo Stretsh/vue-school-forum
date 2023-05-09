@@ -6,9 +6,7 @@ const emit = defineEmits(["save"])
 const text = ref('')
 
 const save = () => {
-  const postId = 'dddd' + Math.random()
   const post = {
-    id: postId,
     text: text.value
   }
   emit("save", { post })

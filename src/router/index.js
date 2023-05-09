@@ -6,6 +6,9 @@ import sourceData from  "@/data.json"
 import Forum from "@/pages/Forum.vue";
 import Category from "@/pages/Category.vue";
 import Profile from "@/pages/Profile.vue";
+import ThreadCreate from "@/pages/ThreadCreate.vue";
+import ThreadEdit from "@/pages/ThreadEdit.vue";
+import {findById} from "@/helpers";
 
 const routes = [
   {
@@ -43,7 +46,7 @@ const routes = [
     component: ThreadShow,
     props: true,
     beforeEnter: (to, from, next) => {
-      const threadExists = sourceData.threads.find(thread => thread.id === to.params.id)
+      const threadExists = findById(sourceData.threads, to.params.id)
       if (threadExists)  {
         return next()
       } else {
@@ -57,6 +60,18 @@ const routes = [
         })
       }
     }
+  },
+  {
+    path: '/forum/:forumId/thread/create',
+    name: 'ThreadCreate',
+    component: ThreadCreate,
+    props: true
+  },
+  {
+    path: '/thread/:id/edit',
+    name: 'ThreadEdit',
+    component: ThreadEdit,
+    props: true
   },
   {
     path: '/:pathMatch(.*)*',

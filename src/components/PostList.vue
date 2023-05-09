@@ -3,6 +3,7 @@ import dayjs from "dayjs"
 import localizedDate from 'dayjs/plugin/localizedFormat'
 import {storeToRefs} from "pinia";
 import {useUsersStore} from "@/stores/UsersStore";
+import {findById} from "@/helpers";
 dayjs.extend(localizedDate)
 
 const props = defineProps({
@@ -15,7 +16,7 @@ const props = defineProps({
 const { users } = storeToRefs(useUsersStore())
 
 const userById = (userId) => {
-  return users.value.find(u => u.id === userId)
+  return findById(users.value, userId)
 }
 
 const humanReadableDate = (timestamp) => {

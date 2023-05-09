@@ -3,6 +3,7 @@ import sourceData from "@/data.json"
 import {computed} from "vue";
 import {usePostsStore} from "@/stores/PostsStore"
 import {useThreadsStore} from "@/stores/ThreadsStore"
+import {findById, upsert} from "@/helpers";
 
 export const useUsersStore = defineStore('UsersStore', {
   state: () => {
@@ -13,7 +14,7 @@ export const useUsersStore = defineStore('UsersStore', {
   },
   getters: {
     authUser: (state) => {
-      const user = state.users.find(user => user.id === state.authId)
+      const user = findById(state.users, state.authId)
       if (!user) return null
       return {
         ...user,
@@ -33,9 +34,8 @@ export const useUsersStore = defineStore('UsersStore', {
     }
   },
   actions: {
-    updateUser(newUser) {
-      const userIndex = this.users.findIndex(user => user.id === newUser.id)
-      this.users[userIndex] = newUser
+    setUser (user) {
+      upsert(this.users, user)
     }
   }
 })

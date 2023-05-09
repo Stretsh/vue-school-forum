@@ -2,6 +2,7 @@ import {defineStore} from "pinia"
 import sourceData from "@/data.json"
 import {useThreadsStore} from "@/stores/ThreadsStore"
 import {useUsersStore} from "@/stores/UsersStore";
+import {findById, upsert} from "@/helpers";
 
 export const usePostsStore = defineStore('PostsStore', {
   state: () => {
@@ -17,10 +18,14 @@ export const usePostsStore = defineStore('PostsStore', {
       post.id = 'dddd' + Math.random()
       post.userId = useUsersStore().authId
       post.publishedAt = Math.floor(Date.now() / 1000)
-      this.posts.push(post)
+      this.setPost(post)
 
-      const thread = useThreadsStore().threads.find(thread => thread.id === post.threadId)
+      const thread = findById(useThreadsStore().threads, post.threadId)
+      thread.posts = thread.posts || []
       thread.posts.push(post.id)
+    },
+    setPost (post) {
+      upsert(this.posts, post)
     }
   }
 })

@@ -12,7 +12,7 @@ const props = defineProps({
 const activeUser = { ...props.user }
 
 const save = () => {
-    useUsersStore().updateUser(activeUser)
+    useUsersStore().setUser(activeUser)
     router.push({name: "Profile"})
 }
 

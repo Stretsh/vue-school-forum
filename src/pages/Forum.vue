@@ -5,6 +5,7 @@ import {computed} from "vue";
 import {storeToRefs} from "pinia";
 import {useForumsStore} from "@/stores/ForumsStore";
 import {useThreadsStore} from "@/stores/ThreadsStore";
+import {findById} from "@/helpers";
 
 const { forums } = storeToRefs(useForumsStore())
 const { threads } = storeToRefs(useThreadsStore())
@@ -16,7 +17,7 @@ const props = defineProps({
   }
 })
 
-const forum = computed(() => forums.value.find(forum => forum.id === props.id))
+const forum = computed(() => findById(forums.value, props.id))
 const forumThreads = computed(() => threads.value.filter(thread => thread.forumId === props.id))
 </script>
 
@@ -27,7 +28,9 @@ const forumThreads = computed(() => threads.value.filter(thread => thread.forumI
                 <h1>{{ forum.name }}</h1>
                 <p class="text-lead">{{ forum.description }}</p>
             </div>
-            <a href="#" class="btn-green btn-small">Start a thread</a>
+            <RouterLink :to="{name: 'ThreadCreate', params: {forumId: forum.id}}" class="btn-green btn-small">
+                Start a thread
+            </RouterLink>
         </div>
     </div>
     <div class="col-full push-top">
