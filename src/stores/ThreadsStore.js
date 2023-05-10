@@ -12,7 +12,23 @@ export const useThreadsStore = defineStore('ThreadsStore', {
     }
   },
   getters: {
-
+    thread: state => {
+      return (id) => {
+        const thread = findById(state.threads, id)
+        return {
+          ...thread,
+          get author () {
+            return findById(useUsersStore().users, thread.userId)
+          },
+          get repliesCount () {
+            return thread.posts.length - 1
+          },
+          get contributorsCount () {
+            return thread.contributors?.length || 0
+          }
+        }
+      }
+    }
   },
   actions: {
     async createThread ({ text, title, forumId }) {
@@ -32,7 +48,6 @@ export const useThreadsStore = defineStore('ThreadsStore', {
       user.threads = user.threads || []
       user.threads.push(thread.id)
 
-      // return {id: thread.id}
       return findById(this.threads, thread.id)
     },
     async updateThread ({ title, text, id }) {

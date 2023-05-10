@@ -23,6 +23,12 @@ export const usePostsStore = defineStore('PostsStore', {
       const thread = findById(useThreadsStore().threads, post.threadId)
       thread.posts = thread.posts || []
       thread.posts.push(post.id)
+
+      thread.contributors = thread.contributors || []
+      if (!thread.contributors.includes(post.userId)) {
+        thread.contributors.push(post.userId)
+      }
+
     },
     setPost (post) {
       upsert(this.posts, post)

@@ -1,9 +1,8 @@
 <script setup>
 import dayjs from "dayjs"
 import localizedDate from 'dayjs/plugin/localizedFormat'
-import {storeToRefs} from "pinia";
-import {useUsersStore} from "@/stores/UsersStore";
-import {findById} from "@/helpers";
+import {storeToRefs} from "pinia"
+import {useUsersStore} from "@/stores/UsersStore"
 dayjs.extend(localizedDate)
 
 const props = defineProps({
@@ -13,11 +12,7 @@ const props = defineProps({
   }
 })
 
-const { users } = storeToRefs(useUsersStore())
-
-const userById = (userId) => {
-  return findById(users.value, userId)
-}
+const userById = (userId) => useUsersStore().user(userId)
 
 const humanReadableDate = (timestamp) => {
     return dayjs.unix(timestamp).format("llll")
@@ -37,7 +32,8 @@ const humanReadableDate = (timestamp) => {
                     <img class="avatar-large" :src="userById(post.userId).avatar" alt="">
                 </a>
 
-                <p class="desktop-only text-small">100 posts</p>
+                <p class="desktop-only text-small">{{ userById(post.userId).postsCount }} posts</p>
+                <p class="desktop-only text-small">{{ userById(post.userId).threadsCount }} threads</p>
             </div>
 
             <div class="post-content">

@@ -18,7 +18,10 @@ const props = defineProps({
 })
 
 const forum = computed(() => findById(forums.value, props.id))
-const forumThreads = computed(() => threads.value.filter(thread => thread.forumId === props.id))
+const forumThreads = computed(() => forum.value.threads ? forum.value.threads.map(threadId => getThread(threadId)) : [])
+
+const getThread = (id) => useThreadsStore().thread(id)
+
 </script>
 
 <template>

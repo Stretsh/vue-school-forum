@@ -39,7 +39,7 @@ const userById = (userId) => findById(users.value, userId)
 
                 <div class="activity">
                     <p class="replies-count">
-                        {{ thread.posts.length}} replies
+                        {{ thread.repliesCount}} replies
                     </p>
 
                     <img :src="userById(thread.userId).avatar" alt="" class="avatar-medium">
