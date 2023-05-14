@@ -1,14 +1,15 @@
 <script setup>
-import ThreadList from "@/components/ThreadList.vue";
-
-import {computed} from "vue";
+import ThreadList from '@/components/ThreadList.vue'
+import {computed, onBeforeMount} from 'vue'
+import {useForumStore} from '@/stores/ForumStore'
+import {useThreadStore} from '@/stores/ThreadStore'
+import {useUserStore} from '@/stores/UserStore'
+import {findById} from '@/helpers'
 import {storeToRefs} from "pinia";
-import {useForumsStore} from "@/stores/ForumsStore";
-import {useThreadsStore} from "@/stores/ThreadsStore";
-import {findById} from "@/helpers";
 
-const { forums } = storeToRefs(useForumsStore())
-const { threads } = storeToRefs(useThreadsStore())
+const {forums} = storeToRefs(useForumStore())
+const {threads} = storeToRefs(useThreadStore())
+const {users} = storeToRefs(useUserStore())
 
 const props = defineProps({
   id: {
@@ -18,14 +19,22 @@ const props = defineProps({
 })
 
 const forum = computed(() => findById(forums.value, props.id))
-const forumThreads = computed(() => forum.value.threads ? forum.value.threads.map(threadId => getThread(threadId)) : [])
+const forumThreads = computed(() => forum.value.threads ?
+  forum.value.threads.map(threadId => getThread(threadId)) :
+  [])
 
-const getThread = (id) => useThreadsStore().thread(id)
+const getThread = (id) => useThreadStore().thread(id)
+
+onBeforeMount(async () => {
+  const forumData = await useForumStore().fetchForum(props.id)
+  const threadsData = await useThreadStore().fetchThreads(forumData.threads)
+  await useUserStore().fetchUsers(threadsData.map(thread => thread.userId))
+})
 
 </script>
 
 <template>
-    <div class="col-full push-top">
+    <div v-if="forum" class="col-full push-top">
         <div class="forum-header">
             <div class="forum-details">
                 <h1>{{ forum.name }}</h1>
@@ -36,7 +45,8 @@ const getThread = (id) => useThreadsStore().thread(id)
             </RouterLink>
         </div>
     </div>
-    <div class="col-full push-top">
+    <div v-if="forum" class="col-full push-top">
+<!--        {{ forumThreads }}-->
         <ThreadList :threads="forumThreads" />
     </div>
 </template>

@@ -1,14 +1,25 @@
 <script setup>
-import CategoryList from "@/components/CategoryList.vue"
-import { useCategoriesStore } from "@/stores/CategoriesStore"
+import CategoryList from '@/components/CategoryList.vue'
+import {useCategoryStore} from '@/stores/CategoryStore'
+import {onBeforeMount} from 'vue'
+import {useForumStore} from '@/stores/ForumStore'
+import {useUserStore} from "@/stores/UserStore";
 import {storeToRefs} from "pinia";
 
-const { categories } = storeToRefs(useCategoriesStore())
+const {categories} = storeToRefs(useCategoryStore())
+const forumStore = useForumStore()
+
+onBeforeMount(async () => {
+  const getCategories = await useCategoryStore().fetchAllCategories()
+  const forumIds = getCategories.map(category => category.forums).flat()
+  await forumStore.fetchForums(forumIds)
+})
+
 </script>
 
 <template>
-  <h1 class="push-top">Welcome to the Forum</h1>
-  <CategoryList :categories="categories" />
+    <h1 class="push-top">Welcome to the Forum</h1>
+    <CategoryList :categories="categories"/>
 </template>
 
 <style scoped>

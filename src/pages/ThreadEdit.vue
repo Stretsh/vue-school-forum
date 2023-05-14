@@ -1,10 +1,10 @@
 <script setup>
 
-import {computed} from "vue"
-import {useThreadsStore} from "@/stores/ThreadsStore";
+import {computed, onBeforeMount} from "vue"
+import {useThreadStore} from "@/stores/ThreadStore";
 import router from "@/router";
 import ThreadForm from "@/components/ThreadForm.vue";
-import {usePostsStore} from "@/stores/PostsStore";
+import {usePostStore} from "@/stores/PostStore";
 import {findById} from "@/helpers";
 
 const props = defineProps({
@@ -14,13 +14,17 @@ const props = defineProps({
   }
 })
 
-const thread = computed(() => findById(useThreadsStore().threads, props.id))
-const text = computed(() => findById(usePostsStore().posts, thread.value.posts[0]).text).value
+const thread = computed(() => findById(useThreadStore().threads, props.id))
+const text = computed(() => {
+    let post = findById(usePostStore().posts, thread.value.posts[0])
+    post = { ...post }.text
+    return post || null
+})
 
 console.log(text)
 
 const save = async (thread) => {
-  const newThread = await useThreadsStore().updateThread({ ...thread, id: props.id })
+  const newThread = await useThreadStore().updateThread({ ...thread, id: props.id })
 
   router.push({ name: 'ThreadShow', params: { id: newThread.id } })
 }
@@ -28,11 +32,14 @@ const save = async (thread) => {
 const cancel = () => {
   router.push({name: 'ThreadShow', params: {id: props.id}})
 }
-
+onBeforeMount( async () => {
+    const threadData = await useThreadStore().fetchThread(props.id)
+    const postData = usePostStore().fetchPost(threadData.posts[0])
+})
 </script>
 
 <template>
-    <div class="col-full push-top">
+    <div v-if="thread && text" class="col-full push-top">
         <h1>Editing <i>{{ thread.title }}</i></h1>
 
         <ThreadForm :title="thread.title" :text="text" @save="save" @cancel="cancel"/>

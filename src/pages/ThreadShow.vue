@@ -1,16 +1,16 @@
 <script setup>
-import {computed, reactive, ref} from "vue"
+import {computed, onMounted, reactive, ref} from "vue"
 import PostList from "@/components/PostList.vue"
 import PostForm from "@/components/PostForm.vue"
 import {storeToRefs} from "pinia"
-import {useThreadsStore} from "@/stores/ThreadsStore"
-import {usePostsStore} from "@/stores/PostsStore"
-import {findById} from "@/helpers"
-import AppDate from "@/components/AppDate.vue";
+import {useThreadStore} from "@/stores/ThreadStore"
+import {usePostStore} from "@/stores/PostStore"
+import {useUserStore} from '@/stores/UserStore'
+import AppDate from "@/components/AppDate.vue"
 
-const { threads } = storeToRefs(useThreadsStore())
-const { posts } = storeToRefs(usePostsStore())
-const { createPost } = usePostsStore()
+const { threads } = storeToRefs(useThreadStore())
+const { posts } = storeToRefs(usePostStore())
+const createPost = usePostStore().createPost
 
 const props = defineProps({
     id: {
@@ -30,26 +30,36 @@ const addPost = (eventData) => {
     createPost(post)
 }
 
-const getThread = (id) => useThreadsStore().thread(id)
+const getThread = (id) => useThreadStore().thread(id)
+
+onMounted( async () => {
+    // Fetch the thread
+    const fetchedThread = await useThreadStore().fetchThread(props.id)
+    //Fetch the user
+    await useUserStore().fetchUser(fetchedThread.userId)
+    //fetch the posts
+    const posts = await usePostStore().fetchPosts(fetchedThread.posts)
+    const postUsers = posts.map(post => post.userId)
+    await useUserStore().fetchUsers(postUsers)
+})
 
 </script>
 
 <template>
-    <div class="col-large push-top">
+    <div v-if="thread" class="col-large push-top">
         <h1>
-            {{ thread.title }}
             <RouterLink :to="{name: 'ThreadEdit', id: props.id}">
                 <button class="btn-green btn-small">Edit Thread</button>
             </RouterLink>
         </h1>
 
         <p>
-            By <a href="" class="link-unstyled">{{ thread.author.name}}</a>,
-            on <AppDate :timestamp="thread.publishedAt" />.
+            By <a href="" class="link-unstyled">{{ thread.value.author?.name }}</a>,
+            on <AppDate :timestamp="thread.value.publishedAt" />.
             <span style="float: right; margin-top: 2px" class="hide-mobile text-faded text-small">
-                {{ thread.repliesCount }} replies by
-                {{ thread.contributorsCount}}
-                contributor{{ thread.contributorsCount !== 1 ? "s" : ""}}
+                {{ thread.value.repliesCount }} replies by
+                {{ thread.value.contributorsCount}}
+                contributor{{ thread.value.contributorsCount !== 1 ? "s" : ""}}
             </span>
         </p>
 

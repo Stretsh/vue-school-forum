@@ -14,7 +14,7 @@ const humanReadableDate = () => {
 </script>
 
 <template>
-    <span>
+    <span v-if="timestamp">
         {{ humanReadableDate() }}
     </span>
 </template>

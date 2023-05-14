@@ -1,7 +1,7 @@
 <script setup>
 import PostList from "@/components/PostList.vue"
 
-import {useUsersStore} from "@/stores/UsersStore"
+import {useUserStore} from "@/stores/UserStore"
 import UserProfileCard from "@/components/UserProfileCard.vue"
 import UserProfileForm from "@/components/UserProfileForm.vue"
 import {computed} from "vue";
@@ -13,7 +13,7 @@ const props = defineProps({
     }
 })
 
-const user = computed(() => useUsersStore().authUser)
+const user = computed(() => useUserStore().authUser)
 
 </script>
 

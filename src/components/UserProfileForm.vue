@@ -1,5 +1,5 @@
 <script setup>
-import {useUsersStore} from "@/stores/UsersStore"
+import {useUserStore} from "@/stores/UserStore"
 import router from "@/router"
 
 const props = defineProps({
@@ -12,7 +12,7 @@ const props = defineProps({
 const activeUser = { ...props.user }
 
 const save = () => {
-    useUsersStore().setUser(activeUser)
+    useUserStore().setUser(activeUser)
     router.push({name: "Profile"})
 }
 

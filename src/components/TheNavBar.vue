@@ -1,8 +1,11 @@
 <script setup>
-import {useUsersStore} from "@/stores/UsersStore"
-import {computed} from "vue";
+import {useUserStore} from '@/stores/UserStore'
+import {computed} from 'vue'
+import {storeToRefs} from 'pinia'
 
-const authUser = computed(() => useUsersStore().authUser)
+const store = useUserStore()
+const {users, authId} = storeToRefs(store)
+const authUser = computed(() => users.value.find(u => u.id = authId.value))
 
 </script>
 
@@ -20,7 +23,7 @@ const authUser = computed(() => useUsersStore().authUser)
 
       <nav class="navbar">
           <ul>
-              <li class="navbar-user">
+              <li v-if="authUser" class="navbar-user">
                   <RouterLink :to="{name: 'Profile'}">
                       <img class="avatar-small"
                            :src="authUser.avatar" :alt="`${authUser.name} profile picture`">

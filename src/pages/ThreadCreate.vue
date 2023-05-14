@@ -1,11 +1,11 @@
 <script setup>
 
-import {computed} from "vue"
-import {useForumsStore} from "@/stores/ForumsStore"
-import {useThreadsStore} from "@/stores/ThreadsStore";
-import router from "@/router";
-import ThreadForm from "@/components/ThreadForm.vue";
-import {findById} from "@/helpers";
+import {computed, onBeforeMount} from "vue"
+import {useForumStore} from "@/stores/ForumStore"
+import {useThreadStore} from "@/stores/ThreadStore"
+import router from "@/router"
+import ThreadForm from "@/components/ThreadForm.vue"
+import {findById} from "@/helpers"
 
 const props = defineProps({
   forumId: {
@@ -14,10 +14,12 @@ const props = defineProps({
   }
 })
 
-const forum = computed(() => findById(useForumsStore().forums, props.forumId))
+const forum = computed(() => {
+    return findById(useForumStore().forums, props.forumId) || {}
+})
 
 const save = async (thread) => {
-  const newThread = await useThreadsStore().createThread({ ...thread, forumId: props.forumId })
+  const newThread = await useThreadStore().createThread({ ...thread, forumId: props.forumId })
 
   router.push({ name: 'ThreadShow', params: { id: newThread.id } })
 }
@@ -25,11 +27,14 @@ const save = async (thread) => {
 const cancel = () => {
   router.push({name: 'Forum', params: {id: props.forumId}})
 }
+onBeforeMount(() => {
+    const forumData = useForumStore().fetchForum(props.forumId)
+})
 
 </script>
 
 <template>
-    <div class="col-full push-top">
+    <div v-if="forum" class="col-full push-top">
         <h1>Create a new thread in <i>{{ forum.name }}</i></h1>
 
         <ThreadForm @save="save" @cancel="cancel"/>

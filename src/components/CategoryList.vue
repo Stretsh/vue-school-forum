@@ -1,9 +1,8 @@
 <script setup>
-import ForumList from "@/components/ForumList.vue"
-import {storeToRefs} from "pinia";
-import {useForumsStore} from "@/stores/ForumsStore";
+import ForumList from '@/components/ForumList.vue'
+import {useForumStore} from '@/stores/ForumStore'
 
-const { forums } = storeToRefs(useForumsStore())
+const forums = useForumStore().forums
 
 const props = defineProps({
   categories: {
@@ -13,15 +12,16 @@ const props = defineProps({
 })
 
 const getForumsForCategories = (category) => {
-  return forums.value.filter(forum => forum.categoryId === category.id)
+    console.log(category)
+  return forums.filter(forum => forum.categoryId === category.id)
 }
 
 </script>
 
 <template>
     <ForumList
+        v-for="category in categories"
         :forums="getForumsForCategories(category)"
-        v-for="category in props.categories"
         :key="category.id"
         :title="category.name"
         :category-id="category.id"

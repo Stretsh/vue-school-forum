@@ -2,7 +2,7 @@
 import dayjs from "dayjs"
 import localizedDate from 'dayjs/plugin/localizedFormat'
 import {storeToRefs} from "pinia"
-import {useUsersStore} from "@/stores/UsersStore"
+import {useUserStore} from "@/stores/UserStore"
 dayjs.extend(localizedDate)
 
 const props = defineProps({
@@ -12,7 +12,7 @@ const props = defineProps({
   }
 })
 
-const userById = (userId) => useUsersStore().user(userId)
+const userById = (userId) => useUserStore().user(userId)
 
 const humanReadableDate = (timestamp) => {
     return dayjs.unix(timestamp).format("llll")
@@ -26,14 +26,14 @@ const humanReadableDate = (timestamp) => {
              v-for="post in props.posts"
              :key="post.id"
         >
-            <div class="user-info">
-                <a href="#" class="user-name">{{ userById(post.userId).name }}</a>
+            <div v-if="userById(post.userId)" class="user-info">
+                <a href="#" class="user-name">{{ userById(post.userId).value?.name }}</a>
                 <a href="#">
-                    <img class="avatar-large" :src="userById(post.userId).avatar" alt="">
+                    <img class="avatar-large" :src="userById(post.userId).value?.avatar" alt="">
                 </a>
 
-                <p class="desktop-only text-small">{{ userById(post.userId).postsCount }} posts</p>
-                <p class="desktop-only text-small">{{ userById(post.userId).threadsCount }} threads</p>
+                <p class="desktop-only text-small">{{ userById(post.userId).value?.postsCount }} posts</p>
+                <p class="desktop-only text-small">{{ userById(post.userId).value?.threadsCount }} threads</p>
             </div>
 
             <div class="post-content">
