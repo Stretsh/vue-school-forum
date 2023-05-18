@@ -33,13 +33,13 @@ export const useUserStore = defineStore('UserStore', () => {
         return posts.value.filter(post => post.userId === foundUser.id)
       },
       get postsCount() {
-        return this.posts.length
+        return foundUser.postsCount || 0
       },
       get threads() {
         return threads.value.filter(thread => thread.userId === foundUser.id)
       },
       get threadsCount() {
-        return this.threads.length
+        return foundUser.threads?.length || 0
       }
     }
   }))

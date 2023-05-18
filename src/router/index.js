@@ -1,14 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from "@/pages/Home.vue";
-import ThreadShow from "@/pages/ThreadShow.vue";
-import NotFound from "@/pages/NotFound.vue";
-import sourceData from  "@/data.json"
-import Forum from "@/pages/Forum.vue";
-import Category from "@/pages/Category.vue";
-import Profile from "@/pages/Profile.vue";
-import ThreadCreate from "@/pages/ThreadCreate.vue";
-import ThreadEdit from "@/pages/ThreadEdit.vue";
-import {findById} from "@/helpers";
+import Home from '@/pages/Home.vue'
+import ThreadShow from '@/pages/ThreadShow.vue'
+import NotFound from '@/pages/NotFound.vue'
+import Forum from '@/pages/Forum.vue'
+import Category from '@/pages/Category.vue'
+import Profile from '@/pages/Profile.vue'
+import ThreadCreate from '@/pages/ThreadCreate.vue'
+import ThreadEdit from '@/pages/ThreadEdit.vue'
 
 const routes = [
   {
@@ -45,21 +43,21 @@ const routes = [
     name: 'ThreadShow',
     component: ThreadShow,
     props: true,
-    beforeEnter: (to, from, next) => {
-      const threadExists = findById(sourceData.threads, to.params.id)
-      if (threadExists)  {
-        return next()
-      } else {
-        next({
-          name: 'NotFound',
-          // preserve current path and remove the first char to avoid the target URL starting with `//`
-          params: { pathMatch: to.path.substring(1).split('/') },
-          // preserve existing query and hash if any
-          query: to.query,
-          hash: to.hash,
-        })
-      }
-    }
+    // beforeEnter: (to, from, next) => {
+    //   const threadExists = findById(useThreadStore().threads, to.params.id)
+    //   if (threadExists)  {
+    //     return next()
+    //   } else {
+    //     next({
+    //       name: 'NotFound',
+    //       // preserve current path and remove the first char to avoid the target URL starting with `//`
+    //       params: { pathMatch: to.path.substring(1).split('/') },
+    //       // preserve existing query and hash if any
+    //       query: to.query,
+    //       hash: to.hash,
+    //     })
+    //   }
+    // }
   },
   {
     path: '/forum/:forumId/thread/create',

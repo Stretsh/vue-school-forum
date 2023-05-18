@@ -6,11 +6,13 @@ import router from './router'
 
 import './assets/main.css'
 import './assets/style.css'
+import FontAwesome from '@/plugins/FontAwesome'
 
 const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
+app.use(FontAwesome)
 
 const components = import.meta.glob('./components/App*.vue', { eager: true })
 Object.keys(components).forEach((path) => {

@@ -1,12 +1,12 @@
 <script setup>
-import {computed, onMounted, reactive, ref} from "vue"
-import PostList from "@/components/PostList.vue"
-import PostForm from "@/components/PostForm.vue"
-import {storeToRefs} from "pinia"
-import {useThreadStore} from "@/stores/ThreadStore"
-import {usePostStore} from "@/stores/PostStore"
+import {computed, onMounted} from 'vue'
+import PostList from '@/components/PostList.vue'
+import PostForm from '@/components/PostForm.vue'
+import {storeToRefs} from 'pinia'
+import {useThreadStore} from '@/stores/ThreadStore'
+import {usePostStore} from '@/stores/PostStore'
 import {useUserStore} from '@/stores/UserStore'
-import AppDate from "@/components/AppDate.vue"
+import AppDate from '@/components/AppDate.vue'
 
 const { threads } = storeToRefs(useThreadStore())
 const { posts } = storeToRefs(usePostStore())
@@ -48,14 +48,14 @@ onMounted( async () => {
 <template>
     <div v-if="thread" class="col-large push-top">
         <h1>
+            {{ thread.value.title }}
             <RouterLink :to="{name: 'ThreadEdit', id: props.id}">
                 <button class="btn-green btn-small">Edit Thread</button>
             </RouterLink>
         </h1>
-
         <p>
             By <a href="" class="link-unstyled">{{ thread.value.author?.name }}</a>,
-            on <AppDate :timestamp="thread.value.publishedAt" />.
+            on <AppDate :timestamp="thread.value.publishedAt || 0" />.
             <span style="float: right; margin-top: 2px" class="hide-mobile text-faded text-small">
                 {{ thread.value.repliesCount }} replies by
                 {{ thread.value.contributorsCount}}

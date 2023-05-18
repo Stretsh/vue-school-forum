@@ -5,11 +5,10 @@ import {useForumStore} from '@/stores/ForumStore'
 import {useThreadStore} from '@/stores/ThreadStore'
 import {useUserStore} from '@/stores/UserStore'
 import {findById} from '@/helpers'
-import {storeToRefs} from "pinia";
+import {storeToRefs} from 'pinia'
 
 const {forums} = storeToRefs(useForumStore())
 const {threads} = storeToRefs(useThreadStore())
-const {users} = storeToRefs(useUserStore())
 
 const props = defineProps({
   id: {
@@ -28,7 +27,9 @@ const getThread = (id) => useThreadStore().thread(id)
 onBeforeMount(async () => {
   const forumData = await useForumStore().fetchForum(props.id)
   const threadsData = await useThreadStore().fetchThreads(forumData.threads)
-  await useUserStore().fetchUsers(threadsData.map(thread => thread.userId))
+  const userMap = threadsData.map(thread => thread.userId)
+    console.log('userMap' , userMap)
+  await useUserStore().fetchUsers(userMap)
 })
 
 </script>
@@ -46,7 +47,6 @@ onBeforeMount(async () => {
         </div>
     </div>
     <div v-if="forum" class="col-full push-top">
-<!--        {{ forumThreads }}-->
         <ThreadList :threads="forumThreads" />
     </div>
 </template>

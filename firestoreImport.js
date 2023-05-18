@@ -5,7 +5,7 @@ https://gist.github.com/mohsulthana/5951674c146a2510a03a4d94e0c09efa
 
 // Imports
 import firestoreService from 'firestore-export-import'
-import firebaseConfig from './src/firebase/index.js'
+import {firebaseConfig} from './src/firebase/index.js'
 import serviceAccount from './serviceAccount.json' assert { type: 'json' }
 import fs from 'fs'
 

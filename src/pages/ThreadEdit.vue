@@ -1,11 +1,11 @@
 <script setup>
 
-import {computed, onBeforeMount} from "vue"
-import {useThreadStore} from "@/stores/ThreadStore";
-import router from "@/router";
-import ThreadForm from "@/components/ThreadForm.vue";
-import {usePostStore} from "@/stores/PostStore";
-import {findById} from "@/helpers";
+import {computed, onBeforeMount} from 'vue'
+import {useThreadStore} from '@/stores/ThreadStore'
+import router from '@/router'
+import ThreadForm from '@/components/ThreadForm.vue'
+import {usePostStore} from '@/stores/PostStore'
+import {findById} from '@/helpers'
 
 const props = defineProps({
   id: {
@@ -20,8 +20,6 @@ const text = computed(() => {
     post = { ...post }.text
     return post || null
 })
-
-console.log(text)
 
 const save = async (thread) => {
   const newThread = await useThreadStore().updateThread({ ...thread, id: props.id })

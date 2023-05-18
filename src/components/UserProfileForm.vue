@@ -1,6 +1,6 @@
 <script setup>
-import {useUserStore} from "@/stores/UserStore"
-import router from "@/router"
+import {useUserStore} from '@/stores/UserStore'
+import router from '@/router'
 
 const props = defineProps({
     user: {

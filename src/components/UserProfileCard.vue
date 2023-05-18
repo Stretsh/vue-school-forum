@@ -1,7 +1,5 @@
 <script setup>
 
-import UserProfileForm from "@/components/UserProfileForm.vue";
-
 const props = defineProps({
     user: {
         type: Object,

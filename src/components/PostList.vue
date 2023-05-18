@@ -1,8 +1,13 @@
 <script setup>
-import dayjs from "dayjs"
+import dayjs from 'dayjs'
 import localizedDate from 'dayjs/plugin/localizedFormat'
-import {storeToRefs} from "pinia"
-import {useUserStore} from "@/stores/UserStore"
+import {storeToRefs} from 'pinia'
+import {useUserStore} from '@/stores/UserStore'
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
+import {ref} from 'vue'
+import PostForm from '@/components/PostForm.vue'
+import {usePostStore} from '@/stores/PostStore'
+
 dayjs.extend(localizedDate)
 
 const props = defineProps({
@@ -12,10 +17,24 @@ const props = defineProps({
   }
 })
 
-const userById = (userId) => useUserStore().user(userId)
+const { authId } = storeToRefs(useUserStore())
+
+let editing = ref(null)
+
+const userById = (userId) => useUserStore().user(userId).value
 
 const humanReadableDate = (timestamp) => {
-    return dayjs.unix(timestamp).format("llll")
+    return dayjs.unix(timestamp).format('llll')
+}
+
+const toggleEditMode = function (id) {
+    editing.value = id === editing.value ? null : id
+}
+
+const handleUpdate = async (post) => {
+    console.log('Pst in PostEdit', post)
+    await usePostStore().updatePost({ text: post.text, id: post.id})
+    editing.value = null
 }
 
 </script>
@@ -24,25 +43,34 @@ const humanReadableDate = (timestamp) => {
     <div class="post-list">
         <div class="post"
              v-for="post in props.posts"
-             :key="post.id"
-        >
+             :key="post.id">
             <div v-if="userById(post.userId)" class="user-info">
-                <a href="#" class="user-name">{{ userById(post.userId).value?.name }}</a>
+                <a href="#" class="user-name">{{ userById(post.userId).name }}</a>
                 <a href="#">
-                    <img class="avatar-large" :src="userById(post.userId).value?.avatar" alt="">
+                    <img class="avatar-large" :src="userById(post.userId).avatar" alt="">
                 </a>
 
-                <p class="desktop-only text-small">{{ userById(post.userId).value?.postsCount }} posts</p>
-                <p class="desktop-only text-small">{{ userById(post.userId).value?.threadsCount }} threads</p>
+                <p class="desktop-only text-small">{{ userById(post.userId).postsCount }} posts</p>
+                <p class="desktop-only text-small">{{ userById(post.userId).threadsCount }} threads</p>
             </div>
 
             <div class="post-content">
-                <div>
-                    <p>{{ post.text }}</p>
+                <div class="col-full">
+                    <PostForm :post="post"
+                              v-if="editing === post.id"
+                              @save="handleUpdate" />
+                    <p v-else>{{ post.text }}</p>
                 </div>
+                <a v-if="post.userId === authId" @click.prevent="toggleEditMode(post.id)"
+                   style="margin-left: auto; padding-left: 10px;"
+                   class="link-unstyled"
+                   title="Change post">
+                    <font-awesome-icon icon="fa-pencil"></font-awesome-icon>
+                </a>
             </div>
 
             <div class="post-date text-faded">
+                <div v-if="post.edited?.at" class="edition-info">edited</div>
                 <AppDate :timestamp="post.publishedAt" />
             </div>
 

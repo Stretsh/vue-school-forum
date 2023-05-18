@@ -1,10 +1,9 @@
 <script setup>
-import {reactive} from "vue"
-import {storeToRefs} from "pinia"
-import {usePostStore} from "@/stores/PostStore"
-import {useUserStore} from "@/stores/UserStore"
-import {findById} from "@/helpers"
-import AppDate from "@/components/AppDate.vue";
+import {storeToRefs} from 'pinia'
+import {usePostStore} from '@/stores/PostStore'
+import {useUserStore} from '@/stores/UserStore'
+import {findById} from '@/helpers'
+import AppDate from '@/components/AppDate.vue'
 
 
 const { posts } = storeToRefs(usePostStore())
@@ -22,11 +21,6 @@ const postById = (postId) => {
 }
 
 const userById = (userId) => findById(users.value, userId) || {}
-// const userById = (userId) => {
-//     const test = findById(users.value, userId)
-//     // console.log({...test}.name)
-//     return {...test}
-// }
 </script>
 
 <template>

@@ -1,11 +1,10 @@
 <script setup>
-
-import {computed, onBeforeMount} from "vue"
-import {useForumStore} from "@/stores/ForumStore"
-import {useThreadStore} from "@/stores/ThreadStore"
-import router from "@/router"
-import ThreadForm from "@/components/ThreadForm.vue"
-import {findById} from "@/helpers"
+import {computed, onBeforeMount} from 'vue'
+import {useForumStore} from '@/stores/ForumStore'
+import {useThreadStore} from '@/stores/ThreadStore'
+import router from '@/router'
+import ThreadForm from '@/components/ThreadForm.vue'
+import {findById} from '@/helpers'
 
 const props = defineProps({
   forumId: {
@@ -19,6 +18,7 @@ const forum = computed(() => {
 })
 
 const save = async (thread) => {
+    console.log('Submitted thread', { ...thread })
   const newThread = await useThreadStore().createThread({ ...thread, forumId: props.forumId })
 
   router.push({ name: 'ThreadShow', params: { id: newThread.id } })

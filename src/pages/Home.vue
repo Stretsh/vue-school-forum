@@ -3,8 +3,7 @@ import CategoryList from '@/components/CategoryList.vue'
 import {useCategoryStore} from '@/stores/CategoryStore'
 import {onBeforeMount} from 'vue'
 import {useForumStore} from '@/stores/ForumStore'
-import {useUserStore} from "@/stores/UserStore";
-import {storeToRefs} from "pinia";
+import {storeToRefs} from 'pinia'
 
 const {categories} = storeToRefs(useCategoryStore())
 const forumStore = useForumStore()

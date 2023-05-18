@@ -1,5 +1,5 @@
 <script setup>
-import {computed, reactive} from "vue";
+import {computed, reactive} from 'vue'
 
 const props = defineProps({
     title: {type: String, default: ''},

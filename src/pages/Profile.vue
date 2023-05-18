@@ -1,10 +1,9 @@
 <script setup>
-import PostList from "@/components/PostList.vue"
-
-import {useUserStore} from "@/stores/UserStore"
-import UserProfileCard from "@/components/UserProfileCard.vue"
-import UserProfileForm from "@/components/UserProfileForm.vue"
-import {computed} from "vue";
+import PostList from '@/components/PostList.vue'
+import {useUserStore} from '@/stores/UserStore'
+import UserProfileCard from '@/components/UserProfileCard.vue'
+import UserProfileForm from '@/components/UserProfileForm.vue'
+import {computed} from 'vue'
 
 const props = defineProps({
     edit: {
